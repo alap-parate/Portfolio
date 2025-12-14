@@ -69,8 +69,8 @@ export function SystemMonitor() {
           <span className="text-sm text-gray-400">CPU Load</span>
           <span className="text-sm text-[#a3e635]">{cpuData.currentValue}%</span>
         </div>
-        <div className="bg-[#0a0a0a] rounded border border-[#38bdf8]/10">
-          <ChartContainer config={cpuChartConfig} className="h-[70px] w-full">
+        <div className="bg-[#0a0a0a] rounded border border-[#38bdf8]/10 min-w-[200px]">
+          <ChartContainer config={cpuChartConfig} className="h-[70px] w-full min-h-[70px]">
             <AreaChart
               data={cpuData.data}
               margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
@@ -102,8 +102,8 @@ export function SystemMonitor() {
           <span className="text-sm text-gray-400">Memory</span>
           <span className="text-sm text-[#38bdf8]">{memoryData.currentValue}GB / 64GB</span>
         </div>
-        <div className="bg-[#0a0a0a] rounded border border-[#38bdf8]/10">
-          <ChartContainer config={memoryChartConfig} className="h-[70px] w-full">
+        <div className="bg-[#0a0a0a] rounded border border-[#38bdf8]/10 min-w-[200px]">
+          <ChartContainer config={memoryChartConfig} className="h-[70px] w-full min-h-[70px]">
             <AreaChart
               data={memoryData.data}
               margin={{ top: 5, right: 5, left: 5, bottom: 5 }}

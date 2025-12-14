@@ -1,14 +1,37 @@
-import { useState } from "react"
-import { HeroSection } from "./components/hero-section"
-import { LoadingScreen } from "./components/loading-screen"
+import { MatrixRain } from "./components/matrix-rain"
+import { TopBar } from "./components/top-bar"
+import { FloatingNav } from "./components/floating-nav"
+import { Outlet } from "@tanstack/react-router"
+import { useIsMediumScreen } from "./hooks/use-media-query"
+import { Toaster } from "sonner"
 
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true)
+  const isMediumScreen = useIsMediumScreen()
 
   return (
-    <>
-      <LoadingScreen onComplete={() => setIsLoading(false)} />
-      {isLoading ? null : <HeroSection />}
-    </>
+    <div className="relative min-h-screen bg-background cyber-grid overflow-x-hidden">
+      {/* Only show matrix rain on desktop */}
+      {isMediumScreen && <MatrixRain />}
+      {isMediumScreen && <TopBar />}
+
+      {/* Floating navigation */}
+      <FloatingNav />
+
+      {/* Page content */}
+      <Outlet />
+
+      {/* Toast notifications */}
+      <Toaster 
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: 'rgba(26, 35, 50, 0.95)',
+            border: '1px solid rgba(56, 189, 248, 0.3)',
+            color: 'white',
+            fontFamily: 'monospace',
+          },
+        }}
+      />
+    </div>
   )
 }

@@ -1,15 +1,14 @@
 import { useState } from "react"
 import { personalInfo } from "@/lib/data"
-import { FloatingNav } from "@/components/floating-nav"
 import { BottomDock } from "@/components/bottom-dock"
-import { TopBar } from "@/components/top-bar"
 import { BottomBar } from "@/components/bottom-bar"
 import { ContactSection } from "@/components/contact-section"
-import { MatrixRain } from "@/components/matrix-rain"
 import { WindowContainer } from "@/components/window-container"
 import { SystemMonitor } from "@/components/system-monitor"
 import { Terminal } from "@/components/terminal"
 import { TaskManager } from "./task-manager"
+import { MobileHeroSection } from "./mobile-hero-section"
+import { useIsMediumScreen } from "@/hooks/use-media-query"
 
 type WindowState = {
   isOpen: boolean
@@ -23,13 +22,32 @@ type WindowStates = {
 }
 
 export function HeroSection() {
-  const initials = `${personalInfo.firstName[0]}${personalInfo.middleName[0]}${personalInfo.lastName[0]}`
+  const isMediumScreen = useIsMediumScreen()
 
   const [windowStates, setWindowStates] = useState<WindowStates>({
     terminal: { isOpen: true, isMinimized: false },
     taskManager: { isOpen: true, isMinimized: false },
     systemMonitor: { isOpen: true, isMinimized: false },
   })
+
+  // Track window focus order (last item = frontmost window)
+  const [focusOrder, setFocusOrder] = useState<(keyof WindowStates)[]>([
+    "systemMonitor", "taskManager", "terminal"
+  ])
+
+  // Bring window to front
+  const handleWindowFocus = (id: keyof WindowStates) => {
+    setFocusOrder((prev) => {
+      const filtered = prev.filter((w) => w !== id)
+      return [...filtered, id]
+    })
+  }
+
+  // Get z-index based on focus order (base: 50, increment by 1 for each position)
+  const getZIndex = (id: keyof WindowStates) => {
+    const index = focusOrder.indexOf(id)
+    return 50 + index
+  }
 
   const handleWindowClose = (id: keyof WindowStates) => {
     setWindowStates((prev) => ({
@@ -47,15 +65,12 @@ export function HeroSection() {
 
   const handleDockToggle = (id: string) => {
     const windowId = id as keyof WindowStates
-    console.log(`Dock toggle: ${windowId}`, windowStates[windowId])
     
     setWindowStates((prev) => {
       const current = prev[windowId]
-      console.log(`Current state for ${windowId}:`, current)
       
       // If window is closed, open it
       if (!current.isOpen) {
-        console.log(`Opening ${windowId}`)
         return {
           ...prev,
           [windowId]: { isOpen: true, isMinimized: false },
@@ -64,7 +79,6 @@ export function HeroSection() {
       
       // If window is minimized, restore it
       if (current.isMinimized) {
-        console.log(`Restoring ${windowId}`)
         return {
           ...prev,
           [windowId]: { ...current, isMinimized: false },
@@ -72,7 +86,6 @@ export function HeroSection() {
       }
       
       // If window is open and not minimized, minimize it
-      console.log(`Minimizing ${windowId}`)
       return {
         ...prev,
         [windowId]: { ...current, isMinimized: true },
@@ -80,13 +93,13 @@ export function HeroSection() {
     })
   }
 
-  return (
-    <section className="relative h-screen flex flex-col bg-background cyber-grid overflow-hidden" id="home">
-        <MatrixRain />
-      <TopBar />
+  // Render mobile layout for screens below 768px
+  if (!isMediumScreen) {
+    return <MobileHeroSection />
+  }
 
-      {/* Floating navigation */}
-      <FloatingNav initials={initials} />
+  return (
+    <section className="relative h-screen flex flex-col overflow-hidden" id="hero">
 
       {/* Main content area */}
       <div className="relative flex-1 flex px-6 container mx-auto pt-20">
@@ -106,42 +119,54 @@ export function HeroSection() {
         </div>
 
         {/* Right side - Draggable windows */}
-        <div className="hidden lg:block absolute right-0 top-20 bottom-20 w-[55%]">
+        <div className="absolute right-0 top-20 bottom-20 w-[55%]">
           {/* System Monitor Window */}
           <WindowContainer 
             title="system_monitor" 
-            initialX={50} 
-            initialY={60} 
-            initialWidth={600}
+            initialXPercent={5}
+            initialYPercent={5}
+            width={550}
+            minWidth={320}
+            maxWidth={650}
             isOpen={windowStates.systemMonitor.isOpen}
             isMinimized={windowStates.systemMonitor.isMinimized}
             onClose={() => handleWindowClose("systemMonitor")}
             onMinimize={() => handleWindowMinimize("systemMonitor")}
+            zIndex={getZIndex("systemMonitor")}
+            onFocus={() => handleWindowFocus("systemMonitor")}
           >
             <SystemMonitor />
           </WindowContainer>
           
           <WindowContainer 
             title="task_manager" 
-            initialX={660} 
-            initialY={200} 
-            initialWidth={500}
+            initialXPercent={55}
+            initialYPercent={20}
+            width={450}
+            minWidth={300}
+            maxWidth={550}
             isOpen={windowStates.taskManager.isOpen}
             isMinimized={windowStates.taskManager.isMinimized}
             onClose={() => handleWindowClose("taskManager")}
             onMinimize={() => handleWindowMinimize("taskManager")}
+            zIndex={getZIndex("taskManager")}
+            onFocus={() => handleWindowFocus("taskManager")}
           >
             <TaskManager />
           </WindowContainer>
           
           <WindowContainer 
             title="terminal — zsh" 
-            initialX={-50} 
-            initialY={435} 
-            initialWidth={700} 
-            initialHeight={400} 
+            initialXPercent={0}
+            initialYPercent={45}
+            width={600}
+            height={350}
+            minWidth={350}
+            maxWidth={750}
             contentClassName="p-0"
             isOpen={windowStates.terminal.isOpen}
+            zIndex={getZIndex("terminal")}
+            onFocus={() => handleWindowFocus("terminal")}
             isMinimized={windowStates.terminal.isMinimized}
             onClose={() => handleWindowClose("terminal")}
             onMinimize={() => handleWindowMinimize("terminal")}

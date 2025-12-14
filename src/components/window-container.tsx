@@ -3,10 +3,15 @@ import { useState, useRef, useEffect, type ReactNode, type PointerEvent } from "
 interface WindowContainerProps {
   title: string
   children: ReactNode
-  initialX?: number
-  initialY?: number
-  initialWidth?: string | number
-  initialHeight?: string | number
+  // Position as percentage of container (0-100)
+  initialXPercent?: number
+  initialYPercent?: number
+  // Size - can be number (px), string (CSS value), or "auto"
+  width?: string | number
+  height?: string | number
+  // Min/Max constraints
+  minWidth?: number
+  maxWidth?: number
   showControls?: boolean
   className?: string
   contentClassName?: string
@@ -15,15 +20,20 @@ interface WindowContainerProps {
   isMinimized?: boolean
   onClose?: () => void
   onMinimize?: () => void
+  // Z-index management
+  zIndex?: number
+  onFocus?: () => void
 }
 
 export function WindowContainer({
   title,
   children,
-  initialX = 0,
-  initialY = 0,
-  initialWidth,
-  initialHeight,
+  initialXPercent = 0,
+  initialYPercent = 0,
+  width = "auto",
+  height = "auto",
+  minWidth = 280,
+  maxWidth,
   showControls = true,
   className = "",
   contentClassName = "p-4",
@@ -31,13 +41,50 @@ export function WindowContainer({
   isMinimized: isMinimizedProp = false,
   onClose,
   onMinimize,
+  zIndex = 50,
+  onFocus,
 }: WindowContainerProps) {
-  const [position, setPosition] = useState({ x: initialX, y: initialY })
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
   const [isClosing, setIsClosing] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
   
   const dragStartPos = useRef({ x: 0, y: 0 })
   const windowPosStart = useRef({ x: 0, y: 0 })
+
+  // Calculate initial position based on percentage of parent container
+  useEffect(() => {
+    const updatePosition = () => {
+      const parent = containerRef.current?.parentElement
+      if (!parent) return
+      
+      const parentRect = parent.getBoundingClientRect()
+      const x = (parentRect.width * initialXPercent) / 100
+      const y = (parentRect.height * initialYPercent) / 100
+      
+      setPosition({ x, y })
+      setDimensions({ width: parentRect.width, height: parentRect.height })
+    }
+    
+    updatePosition()
+    window.addEventListener("resize", updatePosition)
+    return () => window.removeEventListener("resize", updatePosition)
+  }, [initialXPercent, initialYPercent])
+
+  // Calculate responsive width
+  const getResponsiveWidth = () => {
+    if (typeof width === "number") {
+      // Clamp pixel value between min and max
+      const clampedWidth = Math.max(minWidth, Math.min(width, maxWidth || width))
+      // Also ensure it doesn't exceed container width
+      const maxContainerWidth = dimensions.width * 0.95
+      return Math.min(clampedWidth, maxContainerWidth)
+    }
+    return width // Return CSS string as-is
+  }
+
+  const responsiveWidth = getResponsiveWidth()
 
   // Reset closing state when window is restored (either opened or unminimized)
   useEffect(() => {
@@ -46,12 +93,10 @@ export function WindowContainer({
     }
   }, [isOpen, isMinimizedProp])
 
-  // Debug: log state changes
-  useEffect(() => {
-    console.log(`Window "${title}": isOpen=${isOpen}, isMinimized=${isMinimizedProp}, isClosing=${isClosing}`)
-  }, [title, isOpen, isMinimizedProp, isClosing])
-
   const handlePointerDown = (e: PointerEvent<HTMLDivElement>) => {
+    // Bring window to front
+    onFocus?.()
+    
     // Prevent dragging if clicking buttons
     if ((e.target as HTMLElement).tagName === "BUTTON") return
     
@@ -100,19 +145,27 @@ export function WindowContainer({
 
   return (
     <div
-      className={`absolute select-none z-50 transition-all duration-200 origin-center ${
+      ref={containerRef}
+      className={`absolute select-none transition-all duration-200 origin-center ${
         shouldAnimate ? "scale-0 opacity-0 pointer-events-none" : "scale-100 opacity-100"
       } ${className}`}
       style={{
         left: position.x,
         top: position.y,
+        zIndex: zIndex,
         // Disable transition during drag for smoothness
         transition: isDragging ? "none" : undefined,
       }}
+      onPointerDown={() => onFocus?.()}
     >
       <div 
         className="bg-[#1a1a1a]/95 backdrop-blur-sm border border-[#38bdf8]/20 rounded-lg overflow-hidden shadow-2xl flex flex-col"
-        style={{ width: initialWidth, height: initialHeight }}
+        style={{ 
+          width: typeof responsiveWidth === "number" ? responsiveWidth : responsiveWidth,
+          height: height,
+          minWidth: minWidth,
+          maxWidth: maxWidth,
+        }}
       >
         {/* Title bar - Drag handle */}
         <div
@@ -142,8 +195,10 @@ export function WindowContainer({
           <span className="font-mono text-xs text-gray-400 ml-2">{title}</span>
         </div>
 
-        {/* Content */}
-        <div className={`${contentClassName} flex-1 overflow-auto`}>{children}</div>
+        {/* Content - Don't render when minimized/closing to prevent recharts 0-dimension warnings */}
+        <div className={`${contentClassName} flex-1 overflow-auto`}>
+          {!shouldAnimate && children}
+        </div>
       </div>
     </div>
   )
