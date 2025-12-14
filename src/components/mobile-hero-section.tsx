@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { personalInfo } from "@/lib/data"
-import { Mail, Wifi, Battery } from "lucide-react"
+import { Mail, Wifi, Battery, Cpu, Activity } from "lucide-react"
 import { SystemMonitor } from "./system-monitor"
 import { TaskManager } from "./task-manager"
 import { BottomDock } from "./bottom-dock"
@@ -20,7 +20,7 @@ export function MobileHeroSection() {
   const sliderRef = useRef<HTMLDivElement>(null)
   const hasShownToast = useRef(false)
 
-  // Handle dock navigation
+  // Handle dock navigationf
   const handleDockToggle = (id: string) => {
     if (id === "home") {
       setActivePage("home")
@@ -192,30 +192,30 @@ export function MobileHeroSection() {
 
       {/* Page Content - slides based on activePage */}
       {view === "home" && (
-        <div className="absolute inset-0 pt-12 pb-28 overflow-hidden">
+        <div className="absolute inset-0 pt-10 pb-24 overflow-hidden">
           {/* Home Page */}
           <div 
-            className={`absolute inset-0 pt-4 pb-28 px-4 overflow-y-auto transition-transform duration-300 ease-out ${
+            className={`absolute inset-0 pt-10 pb-24 px-4 flex flex-col transition-transform duration-300 ease-out mt-5 ${
               activePage === "home" ? "translate-x-0" : "-translate-x-full"
             }`}
           >
             {/* Time Display */}
-            <p className="text-center text-white/80 text-6xl font-mono mb-1 mt-10">
+            <p className="text-center text-white/80 text-6xl font-mono mb-1">
               {formatTime(currentTime)}
             </p>
             {/* Date Display */}
-            <p className="text-center text-white/80 font-mono text-xs tracking-[0.2em] mb-4">
+            <p className="text-center text-white/80 font-mono text-xs tracking-[0.2em] mb-8">
               {formatDate(currentTime)}
             </p>
 
             {/* Profile Card */}
-            <div className="bg-[#0d1117]/80 backdrop-blur-md border border-[#38bdf8]/20 rounded-2xl p-5 mb-4">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 rounded-full bg-[#38bdf8] border border-[#38bdf8]/40 flex items-center justify-center">
-                  <span className="text-xl align font-bold font-mono">{getInitials()}</span>
+            <div className="bg-[#0d1117]/80 backdrop-blur-md border border-[#38bdf8]/20 rounded-2xl p-4 mb-3">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-full bg-[#38bdf8] border border-[#38bdf8]/40 flex items-center justify-center shrink-0">
+                  <span className="text-lg font-bold font-mono">{getInitials()}</span>
                 </div>
-                <div>
-                  <h2 className="text-white font-bold text-lg">
+                <div className="min-w-0">
+                  <h2 className="text-white font-bold text-lg truncate">
                     {personalInfo.firstName} {personalInfo.middleName} {personalInfo.lastName}
                   </h2>
                   <p className="text-[#38bdf8] font-mono text-xs">:: {personalInfo.role} ::</p>
@@ -227,38 +227,31 @@ export function MobileHeroSection() {
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              <div className="bg-[#0d1117]/80 backdrop-blur-md border border-[#38bdf8]/20 rounded-xl p-4">
-                <div className="w-5 h-5 text-[#38bdf8] mb-2">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
-                    <polyline points="22,12 18,12 15,21 9,3 6,12 2,12" />
-                  </svg>
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              <div className="bg-[#0d1117]/80 backdrop-blur-md border border-[#38bdf8]/20 rounded-xl p-3">
+                <div className="w-8 h-8 text-[#38bdf8] mb-3">
+                  <Activity className="w-8 h-8" />
                 </div>
-                <p className="text-white font-bold text-2xl font-mono">99.9%</p>
+                <p className="text-white font-bold text-xl font-mono">99.9%</p>
                 <p className="text-white/50 font-mono text-xs">Uptime</p>
               </div>
-              <div className="bg-[#0d1117]/80 backdrop-blur-md border border-[#38bdf8]/20 rounded-xl p-4">
-                <div className="w-5 h-5 text-[#38bdf8] mb-2 flex items-center justify-center">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
-                    <rect x="3" y="3" width="7" height="7" rx="1" />
-                    <rect x="14" y="3" width="7" height="7" rx="1" />
-                    <rect x="3" y="14" width="7" height="7" rx="1" />
-                    <rect x="14" y="14" width="7" height="7" rx="1" />
-                  </svg>
+              <div className="bg-[#0d1117]/80 backdrop-blur-md border border-[#38bdf8]/20 rounded-xl p-3">
+                <div className="w-8 h-8 text-[#38bdf8] mb-3 flex items-center justify-center">
+                 <Cpu className="w-8 h-8" />
                 </div>
-                <p className="text-white font-bold text-2xl font-mono">Active</p>
+                <p className="text-white font-bold text-xl font-mono">Active</p>
                 <p className="text-white/50 font-mono text-xs">Status</p>
               </div>
             </div>
 
             {/* Core Stack */}
-            <div className="bg-[#0d1117]/80 backdrop-blur-md border border-[#38bdf8]/20 rounded-xl p-4">
-              <p className="text-white/50 font-mono text-xs mb-3 tracking-wider">CORE STACK</p>
+            <div className="bg-[#0d1117]/80 backdrop-blur-md border border-[#38bdf8]/20 rounded-xl p-3">
+              <p className="text-white/50 font-mono text-sm mb-2 tracking-wider">CORE STACK</p>
               <div className="flex flex-wrap gap-2">
                 {techStack.map((tech) => (
                   <span 
                     key={tech}
-                    className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-white font-mono text-xs"
+                    className="px-2.5 py-1 bg-white/5 border border-white/10 rounded-full text-white font-mono text-xs"
                   >
                     {tech}
                   </span>
@@ -269,40 +262,40 @@ export function MobileHeroSection() {
 
           {/* System Monitor / Task Manager Page */}
           <div 
-            className={`mt-10 absolute inset-0 pt-4 pb-28 px-4 overflow-y-auto transition-transform duration-300 ease-out ${
+            className={`absolute inset-0 pt-10 pb-24 px-4 overflow-y-auto transition-transform duration-300 ease-out ${
               activePage === "taskManager" || activePage === "systemMonitor" 
                 ? "translate-x-0" 
                 : activePage === "home" ? "translate-x-full" : "-translate-x-full"
             }`}
           >
             {/* Page Header */}
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-white font-bold text-lg font-mono">System Monitor</h2>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-white font-bold text-base font-mono">System Monitor</h2>
             </div>
             
             {/* Resources Section */}
-            <div className="mb-4">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-6 h-6 rounded bg-[#38bdf8]/20 flex items-center justify-center">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2" className="w-4 h-4">
+            <div className="mb-3">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-5 h-5 rounded bg-[#38bdf8]/20 flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2" className="w-3 h-3">
                     <rect x="3" y="3" width="7" height="7" rx="1" />
                     <rect x="14" y="3" width="7" height="7" rx="1" />
                     <rect x="3" y="14" width="7" height="7" rx="1" />
                     <rect x="14" y="14" width="7" height="7" rx="1" />
                   </svg>
                 </div>
-                <span className="text-[#38bdf8] font-mono text-sm">Resources</span>
+                <span className="text-[#38bdf8] font-mono text-xs">Resources</span>
               </div>
               <SystemMonitor />
             </div>
 
             {/* Processes Section */}
-            <div className="pt-4 border-t border-[#38bdf8]/20">
-              <div className="flex items-center gap-2 mb-4">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2" className="w-5 h-5">
+            <div className="pt-3 border-t border-[#38bdf8]/20">
+              <div className="flex items-center gap-2 mb-2">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2" className="w-4 h-4">
                   <polyline points="22,12 18,12 15,21 9,3 6,12 2,12" />
                 </svg>
-                <span className="text-[#38bdf8] font-mono text-sm">Processes</span>
+                <span className="text-[#38bdf8] font-mono text-xs">Processes</span>
               </div>
               <TaskManager />
             </div>
@@ -310,7 +303,7 @@ export function MobileHeroSection() {
 
           {/* Contact Page */}
           <div 
-            className={`absolute inset-0 pt-4 pb-28 px-4 flex items-center justify-center transition-transform duration-300 ease-out ${
+            className={`absolute inset-0 pt-10 pb-24 px-4 flex items-center justify-center transition-transform duration-300 ease-out ${
               activePage === "contact" ? "translate-x-0" : "translate-x-full"
             }`}
           >

@@ -34,7 +34,7 @@ export function BottomDock({ onToggle, windowStates, isMobile = false, activeVie
   }
 
   return (
-    <div className={`absolute left-1/2 -translate-x-1/2 z-60 ${isMobile ? 'bottom-8' : 'bottom-16'}`}>
+    <div className={`absolute left-1/2 -translate-x-1/2 z-60 ${isMobile ? 'bottom-[12vh]' : 'bottom-16'}`}>
       <div className={`flex items-center bg-[#0d1117]/90 backdrop-blur-md border border-[#38bdf8]/20 ${isMobile ? 'gap-4 rounded-full px-5 py-3' : 'gap-2 rounded-2xl px-4 py-3'}`}>
         
         {/* Home button - only on mobile */}

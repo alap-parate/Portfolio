@@ -1,6 +1,3 @@
-import Cubes from "../../public/images/cubes.jpg"
-import Nestjs from "../../public/images/nestjs.jpg"
-
 export const personalInfo = {
     firstName: "ALAP",
     middleName: "DASHRATH",
@@ -37,7 +34,7 @@ export const projects: Project[] = [
         title: "NESTJS STARTER TEMPLATE",
         description:
             "Starter Template with basic setup to get started without getting overwhelmed.",
-        image: Nestjs,
+        image: "/images/nestjs.jpg",
         techStack: ["TYPESCRIPT", "NESTJS", "TEMPLATE"],
         links: {
             github: "#",
@@ -50,7 +47,7 @@ export const projects: Project[] = [
         id: 2,
         title: "event-driven cqrs",
         description: "Scalable Event-driven CQRS implementation using Kafka and NestJS.",
-        image: Cubes,
+        image: "/images/cubes.jpg",
         techStack: ["KAFKA", "CQRS", "EVENT-DRIVEN"],
         links: {
             github: "#",

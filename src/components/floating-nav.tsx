@@ -132,7 +132,7 @@ export function FloatingNav() {
       <nav className={`fixed top-7 left-1/2 -translate-x-1/2 z-100 transition-all duration-500 ease-out ${isHidden && !isMenuOpen ? "-translate-y-25" : ""}`}>
         {/* Mobile Nav */}
         {!isMediumScreen ? (
-          <div className="flex justify-between items-center gap-1 bg-[#0d1117]/90 backdrop-blur-sm border border-[#38bdf8]/30 rounded-full px-4 py-3 min-w-[80vw]">
+          <div className="flex justify-between items-center gap-1 bg-[#001117]/90 backdrop-blur-xs border border-[#38bdf8]/30 rounded-full px-4 py-1 min-w-[95vw]">
             <span className="font-bold text-xl text-gray-200">
               {initials}<span className="text-xl text-[#38bdf8]">.</span>
             </span>
