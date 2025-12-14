@@ -58,7 +58,7 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       {/* Background percentage - blurred */}
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
         <span
-          className="font-display text-[40vw] leading-none text-accent select-none blur-lg opacity-30"
+          className="font-display text-[30vw] md:text-[40vw] leading-none text-accent select-none blur-sm md:blur-lg opacity-30"
           style={{ fontWeight: 400 }}
         >
           {Math.floor(percentage)}%
@@ -66,18 +66,18 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       </div>
 
       {/* Foreground cycling words */}
-      <div className="relative z-10 flex items-center justify-center">
+      <div className="relative z-10 flex items-center justify-center px-4">
         <span
           key={currentWordIndex}
-          className="font-display text-white text-xl md:text-[12vw] leading-none animate-blur-in-out"
-          style={{ fontWeight: 400 }}
+          className="font-display text-white text-5xl sm:text-6xl md:text-[12vw] leading-none animate-blur-in-out text-center"
+          style={{ fontWeight: 700 }}
         >
           {loadingWords[currentWordIndex]}
         </span>
       </div>
 
       {/* Progress bar at bottom */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-48">
+      <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 w-32 sm:w-48 md:w-64 px-4">
         <div className="h-[2px] w-full bg-foreground/20 overflow-hidden">
           <div
             className="h-full bg-accent transition-all duration-100 ease-out"
