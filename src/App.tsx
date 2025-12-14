@@ -1,12 +1,19 @@
+import { useState } from "react"
 import { MatrixRain } from "./components/matrix-rain"
 import { TopBar } from "./components/top-bar"
 import { FloatingNav } from "./components/floating-nav"
+import { LoadingScreen } from "./components/loading-screen"
 import { Outlet } from "@tanstack/react-router"
 import { useIsMediumScreen } from "./hooks/use-media-query"
 import { Toaster } from "sonner"
 
 export default function App() {
   const isMediumScreen = useIsMediumScreen()
+  const [isLoading, setIsLoading] = useState(true)
+
+  if (isLoading) {
+    return <LoadingScreen onComplete={() => setIsLoading(false)} />
+  }
 
   return (
     <div className="relative min-h-screen bg-background cyber-grid overflow-x-hidden">
