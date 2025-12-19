@@ -26,6 +26,7 @@ export interface Project {
         caseStudy?: string
         linkedin?: string // Added LinkedIn link option
     }
+    workInProgress: boolean
 }
 
 export const projects: Project[] = [
@@ -37,23 +38,25 @@ export const projects: Project[] = [
         image: "/images/nestjs.jpg",
         techStack: ["TYPESCRIPT", "NESTJS", "TEMPLATE"],
         links: {
-            github: "#",
+            github: "https://github.com/alap-parate/NestJS-Starter-Template",
             linkedin: "#",
             caseStudy: "#",
             live: "#",
         },
+        workInProgress: true,
     },
     {
         id: 2,
-        title: "event-driven cqrs",
-        description: "Scalable Event-driven CQRS implementation using Kafka and NestJS.",
-        image: "/images/cubes.jpg",
-        techStack: ["KAFKA", "CQRS", "EVENT-DRIVEN"],
+        title: "strand-auth",
+        description: "Auth designed to keep auth fast and decoupled while providing forensic visibility into token misuse, expiry, and key-rotation issues.",
+        image: "/images/auth.jpg",
+        techStack: ["TYPESCRIPT", "NESTJS", "AUTHENTICATION", "AUTHORIZATION", "JWT"],
         links: {
-            github: "#",
+            github: "https://github.com/alap-parate/strand-auth",
             linkedin: "#",
             caseStudy: "#",
             live: "#",
         },
+        workInProgress: true,
     },
 ]

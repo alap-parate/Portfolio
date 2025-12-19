@@ -1,4 +1,4 @@
-import { Linkedin, BookOpen, ExternalLink, Github } from "lucide-react"
+import { Linkedin, BookOpen, ExternalLink, Github, Loader } from "lucide-react"
 import type { Project } from "@/lib/data"
 
 interface ProjectCardProps {
@@ -60,6 +60,11 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             >
               <ExternalLink className="w-4 h-4" />
             </a>
+            )}
+          {project.workInProgress && (
+            <span className="w-8 h-8 border-2 border-black flex items-center justify-center hover:bg-black hover:text-white transition-colors">
+              <Loader className="w-4 h-4 animate-spin" />
+            </span>
           )}
         </div>
       </div>
